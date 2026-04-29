@@ -1,0 +1,1726 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NextAI Studio는 AI 에이전트 기반 워크플로우로 현대적인 애플리케이션을 빠르게 구축하는 에이전시입니다.">
+  <title>NextAI Studio | AI 에이전트 기반 앱 빌드</title>
+  <style>
+    :root {
+      --bg: #f7f5f2;
+      --surface: #ffffff;
+      --text-primary: #1f1f1f;
+      --text-secondary: #5b5b5b;
+      --accent: #d97757;
+      --accent-dark: #be6243;
+      --border: #e8e2da;
+      --header-bg: rgba(247, 245, 242, 0.9);
+      --soft-separator: #f0ebe5;
+      --eyebrow-bg: #f6e1d7;
+      --eyebrow-border: #efd4c8;
+      --btn-secondary-hover-border: #d8cfc5;
+      --focus-outline: #f1b8a2;
+      --shadow: 0 8px 24px rgba(31, 31, 31, 0.06);
+      --radius: 16px;
+      --container: 1200px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1115;
+      --surface: #151821;
+      --text-primary: #f2f4f7;
+      --text-secondary: #aeb6c2;
+      --accent: #e07a52;
+      --accent-dark: #c9653f;
+      --border: #2a2f3a;
+      --header-bg: rgba(15, 17, 21, 0.86);
+      --soft-separator: #242a35;
+      --eyebrow-bg: rgba(224, 122, 82, 0.14);
+      --eyebrow-border: rgba(224, 122, 82, 0.28);
+      --btn-secondary-hover-border: #3a3e4a;
+      --focus-outline: #f0b8a2;
+      --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Inter", system-ui, -apple-system, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg);
+      line-height: 1.6;
+      color-scheme: light dark;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(var(--container), 92%);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 88px 0;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: clamp(1.7rem, 2vw, 2.2rem);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      margin: 0 0 36px;
+      color: var(--text-secondary);
+      max-width: 720px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      background: var(--header-bg);
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s ease;
+    }
+
+    .site-header.scrolled {
+      border-color: var(--border);
+    }
+
+    .nav-wrap {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      font-size: 1.05rem;
+    }
+
+    .header-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+      white-space: nowrap;
+    }
+
+    .lang-select {
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-primary);
+      border-radius: 12px;
+      padding: 0 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+
+    .theme-toggle {
+      height: 40px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-primary);
+      border-radius: 12px;
+      padding: 0 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+      border-color: var(--btn-secondary-hover-border);
+    }
+
+    .nav-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .nav-links a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      transition: 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-primary);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 76px 0 62px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-dark);
+      background: var(--eyebrow-bg);
+      border: 1px solid var(--eyebrow-border);
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.04rem;
+      max-width: 620px;
+      margin: 20px 0 28px;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      padding: 12px 18px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--btn-secondary-hover-border);
+      transform: translateY(-1px);
+    }
+
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .flow-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--soft-separator);
+    }
+
+    .flow-item:last-child {
+      border-bottom: none;
+    }
+
+    .flow-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .flow-item strong {
+      display: block;
+      font-size: 0.98rem;
+    }
+
+    .flow-item span {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .problem-grid,
+    .service-grid,
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .step small {
+      color: var(--accent-dark);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.72rem;
+    }
+
+    .step h4 {
+      margin: 8px 0 6px;
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .kpi {
+      text-align: center;
+      padding: 24px 16px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 1.9rem;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .badge-row {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      border: 0;
+      text-align: left;
+      background: transparent;
+      font: inherit;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.28s ease;
+    }
+
+    .faq-answer p {
+      margin: 0;
+      padding: 0 16px 16px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 220px;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-icon {
+      transition: transform 0.2s ease;
+      color: var(--accent-dark);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .cta-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-panel p {
+      margin: 12px auto 22px;
+      max-width: 700px;
+      color: var(--text-secondary);
+    }
+
+    .site-footer {
+      padding: 28px 0 40px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus-outline);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    .contact-form {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: left;
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .input,
+    .textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-primary);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .form-status {
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      min-height: 1.2em;
+    }
+
+    @media (max-width: 1023px) {
+      .hero-grid,
+      .problem-grid,
+      .service-grid,
+      .kpi-grid,
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 767px) {
+      .section {
+        padding: 70px 0;
+      }
+
+      .hero {
+        padding-top: 56px;
+      }
+
+      .hero-grid,
+      .problem-grid,
+      .service-grid,
+      .kpi-grid,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+
+      .header-controls {
+        gap: 8px;
+      }
+
+      .lang-select,
+      .theme-toggle {
+        height: 38px;
+        border-radius: 10px;
+        padding: 0 10px;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 1px);
+        left: 4%;
+        right: 4%;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 10px;
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        border-radius: 10px;
+      }
+
+      .cta-panel {
+        padding: 26px 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a href="#top" class="brand" data-i18n="brandName">NextAI Studio</a>
+      <div class="header-controls">
+        <label for="lang-select" class="sr-only" data-i18n="languageLabel">언어</label>
+        <select id="lang-select" class="lang-select" aria-label="언어 선택">
+          <option value="ko">KO</option>
+          <option value="en">EN</option>
+          <option value="ja">JA</option>
+          <option value="zh">ZH</option>
+        </select>
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false" aria-label="테마 전환">
+          <span id="theme-toggle-text" data-i18n="themeToggle">Dark</span>
+        </button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="menuButton">메뉴</button>
+      <nav class="nav-links" id="nav-links" aria-label="주요 섹션">
+        <a href="#about" data-i18n="navAbout">개요</a>
+        <a href="#solution" data-i18n="navSolution">솔루션</a>
+        <a href="#services" data-i18n="navServices">서비스</a>
+        <a href="#process" data-i18n="navProcess">프로세스</a>
+        <a href="#results" data-i18n="navResults">성과</a>
+        <a href="#faq" data-i18n="navFaq">FAQ</a>
+        <a href="#contact" data-i18n="navContact">문의</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow" data-i18n="heroEyebrow">AI Agent-Powered Agency</span>
+          <h1 data-i18n="heroTitle">AI 에이전트와 함께,<br>현대적인 앱 개발을 더 빠르게.</h1>
+          <p data-i18n="heroSubtitle">
+            NextAI Studio는 기획부터 배포까지 AI 에이전트 기반 워크플로우로
+            MVP와 프로덕션 애플리케이션을 효율적으로 구축합니다.
+          </p>
+          <div class="cta-group">
+            <a class="btn btn-primary" href="#contact" data-i18n="heroCtaContact">상담 요청하기</a>
+            <a class="btn btn-secondary" href="#process" data-i18n="heroCtaProcess">작업 방식 보기</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="NextAI Studio 워크플로우 요약">
+          <div class="flow-item">
+            <div class="flow-dot" aria-hidden="true"></div>
+            <div><strong data-i18n="flowDiscoverTitle">Discover</strong><span data-i18n="flowDiscoverDesc">문제 정의와 성공 지표 정렬</span></div>
+          </div>
+          <div class="flow-item">
+            <div class="flow-dot" aria-hidden="true"></div>
+            <div><strong data-i18n="flowDesignTitle">Design Agent Flow</strong><span data-i18n="flowDesignDesc">사람+에이전트 협업 구조 설계</span></div>
+          </div>
+          <div class="flow-item">
+            <div class="flow-dot" aria-hidden="true"></div>
+            <div><strong data-i18n="flowBuildTitle">Build Sprint</strong><span data-i18n="flowBuildDesc">짧은 주기의 구현과 반복 개선</span></div>
+          </div>
+          <div class="flow-item">
+            <div class="flow-dot" aria-hidden="true"></div>
+            <div><strong data-i18n="flowValidateTitle">Validate & Ship</strong><span data-i18n="flowValidateDesc">QA 자동화와 배포 최적화</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section reveal" id="about">
+      <div class="container">
+        <h2 class="section-title" data-i18n="aboutTitle">왜 지금, AI 에이전트 기반 개발인가</h2>
+        <p class="section-desc" data-i18n="aboutDesc">
+          전통적인 방식은 반복 작업과 커뮤니케이션 병목으로 출시 속도가 느려집니다.
+          NextAI Studio는 에이전트를 활용해 탐색, 구현, 검증의 시간을 단축합니다.
+        </p>
+        <div class="problem-grid">
+          <article class="card">
+            <h3 data-i18n="problem1Title">느린 개발 사이클</h3>
+            <p data-i18n="problem1Desc">요구사항 반영과 배포까지 리드타임이 길어 시장 대응이 늦어집니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="problem2Title">반복적인 작업 부담</h3>
+            <p data-i18n="problem2Desc">보일러플레이트, 테스트, 문서화 등 반복 업무에 리소스가 소모됩니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="problem3Title">품질과 속도의 트레이드오프</h3>
+            <p data-i18n="problem3Desc">속도를 높이면 품질이 흔들리고, 품질을 지키면 속도가 떨어지기 쉽습니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="solution">
+      <div class="container">
+        <h2 class="section-title" data-i18n="solutionTitle">NextAI Studio의 솔루션</h2>
+        <p class="section-desc" data-i18n="solutionDesc">
+          사람의 의사결정에 AI 에이전트의 실행력을 결합해, 입문자부터 실무팀까지
+          재현 가능한 빌드 프로세스를 제공합니다.
+        </p>
+        <div class="card">
+          <h3 data-i18n="solutionCardTitle">Human + Agent 협업 모델</h3>
+          <p data-i18n="solutionCardDesc">
+            전략과 우선순위는 사람이 결정하고, 에이전트는 구현/리팩터링/테스트/검증을
+            보조합니다. 이를 통해 개발 속도와 품질을 동시에 확보합니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="services">
+      <div class="container">
+        <h2 class="section-title" data-i18n="servicesTitle">핵심 서비스</h2>
+        <p class="section-desc" data-i18n="servicesDesc">프로젝트의 단계별 목표에 맞춰 유연한 패키지로 제공합니다.</p>
+        <div class="service-grid">
+          <article class="card">
+            <h3 data-i18n="service1Title">Agent-Powered MVP Build</h3>
+            <p data-i18n="service1Desc">아이디어 검증을 위한 MVP를 빠르게 설계하고 실제 동작 가능한 형태로 구현합니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="service2Title">Legacy Modernization</h3>
+            <p data-i18n="service2Desc">기존 시스템을 현대적인 구조로 개선해 유지보수성과 확장성을 높입니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="service3Title">UI/UX Prototyping</h3>
+            <p data-i18n="service3Desc">실험 가능한 화면과 인터랙션을 빠르게 만들어 사용자 피드백을 앞당깁니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="service4Title">Automated QA & Iteration</h3>
+            <p data-i18n="service4Desc">기능 검증 루프를 자동화해 릴리즈 리스크를 줄이고 개선 주기를 단축합니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="service5Title">Product Engineering Support</h3>
+            <p data-i18n="service5Desc">설계 원칙과 개발 프로세스까지 정리해 내부 팀의 실행력을 함께 끌어올립니다.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="service6Title">Growth-Oriented Roadmap</h3>
+            <p data-i18n="service6Desc">출시 이후 성장을 고려한 기능 우선순위와 기술 로드맵을 제안합니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="process">
+      <div class="container">
+        <h2 class="section-title" data-i18n="processTitle">작업 프로세스</h2>
+        <p class="section-desc" data-i18n="processDesc">짧은 반복 주기로 가설을 검증하고, 실서비스 품질까지 단계적으로 확장합니다.</p>
+        <div class="steps">
+          <article class="step">
+            <small data-i18n="step1Small">Step 1</small>
+            <h4 data-i18n="step1Title">Discovery</h4>
+            <p data-i18n="step1Desc">목표 사용자, 문제, 성공 지표를 정리합니다.</p>
+          </article>
+          <article class="step">
+            <small data-i18n="step2Small">Step 2</small>
+            <h4 data-i18n="step2Title">Agent Workflow Design</h4>
+            <p data-i18n="step2Desc">에이전트 역할과 협업 경계를 설계합니다.</p>
+          </article>
+          <article class="step">
+            <small data-i18n="step3Small">Step 3</small>
+            <h4 data-i18n="step3Title">Build Sprint</h4>
+            <p data-i18n="step3Desc">핵심 기능을 빠르게 구현하고 피드백을 반영합니다.</p>
+          </article>
+          <article class="step">
+            <small data-i18n="step4Small">Step 4</small>
+            <h4 data-i18n="step4Title">Validate & Ship</h4>
+            <p data-i18n="step4Desc">QA 자동화와 검증을 거쳐 안정적으로 배포합니다.</p>
+          </article>
+          <article class="step">
+            <small data-i18n="step5Small">Step 5</small>
+            <h4 data-i18n="step5Title">Continuous Improvement</h4>
+            <p data-i18n="step5Desc">지표 기반으로 기능과 경험을 반복 개선합니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="results">
+      <div class="container">
+        <h2 class="section-title" data-i18n="resultsTitle">성과 및 신뢰 지표</h2>
+        <p class="section-desc" data-i18n="resultsDesc">프로젝트 성격에 따라 지표는 달라지지만, 공통적으로 속도와 안정성 개선을 목표로 합니다.</p>
+        <div class="kpi-grid">
+          <article class="card kpi">
+            <strong data-i18n="kpi1Value">50%</strong>
+            <span data-i18n="kpi1Label">평균 리드타임 단축</span>
+          </article>
+          <article class="card kpi">
+            <strong data-i18n="kpi2Value">2x</strong>
+            <span data-i18n="kpi2Label">주간 배포 빈도 향상</span>
+          </article>
+          <article class="card kpi">
+            <strong data-i18n="kpi3Value">30%</strong>
+            <span data-i18n="kpi3Label">반복 업무 시간 절감</span>
+          </article>
+        </div>
+        <div class="badge-row" aria-label="지원 프로젝트 유형">
+          <span class="badge" data-i18n="badge1">SaaS MVP</span>
+          <span class="badge" data-i18n="badge2">커머스 플랫폼</span>
+          <span class="badge" data-i18n="badge3">내부 운영 툴</span>
+          <span class="badge" data-i18n="badge4">B2B 프로덕트</span>
+          <span class="badge" data-i18n="badge5">AI 기능 통합 프로젝트</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="faq">
+      <div class="container">
+        <h2 class="section-title" data-i18n="faqTitle">자주 묻는 질문</h2>
+        <p class="section-desc" data-i18n="faqDesc">입문자도 이해하기 쉬운 방식으로 진행하며, 프로젝트 상황에 맞춰 유연하게 대응합니다.</p>
+        <div class="faq-list">
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-a1">
+              <span data-i18n="faqQ1">입문자도 에이전트 기반 개발을 시작할 수 있나요?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer" id="faq-a1">
+              <p data-i18n="faqA1">가능합니다. 목표 설정, 도구 선택, 역할 분리까지 실무에 맞춘 기본 프레임을 함께 설계해드립니다.</p>
+            </div>
+          </article>
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-a2">
+              <span data-i18n="faqQ2">내부 개발팀이 없어도 프로젝트를 진행할 수 있나요?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer" id="faq-a2">
+              <p data-i18n="faqA2">네. 기획 단계부터 개발, 검증, 배포까지 풀사이클로 지원하며 필요한 경우 운영 가이드까지 제공합니다.</p>
+            </div>
+          </article>
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-a3">
+              <span data-i18n="faqQ3">기간과 비용은 어떻게 산정되나요?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer" id="faq-a3">
+              <p data-i18n="faqA3">목표 범위, 복잡도, 일정에 따라 산정합니다. Discovery 이후 명확한 범위 문서와 함께 견적을 제안합니다.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="contact">
+      <div class="container">
+        <div class="cta-panel">
+          <h2 class="section-title" data-i18n="contactTitle">지금, NextAI Studio와 시작하세요</h2>
+          <p data-i18n="contactDesc">
+            아이디어 검증이든 기존 서비스 고도화든, AI 에이전트 기반 워크플로우로
+            더 빠르고 신뢰도 높은 제품 개발을 도와드립니다.
+          </p>
+
+          <form id="contact-form" class="contact-form" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="contact-name" data-i18n="contactNameLabel">이름</label>
+                <input
+                  id="contact-name"
+                  name="name"
+                  class="input"
+                  type="text"
+                  autocomplete="name"
+                  required
+                  placeholder="이름"
+                  data-i18n-placeholder="contactNamePlaceholder"
+                >
+              </div>
+              <div class="field">
+                <label for="contact-email" data-i18n="contactEmailLabel">이메일</label>
+                <input
+                  id="contact-email"
+                  name="email"
+                  class="input"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  placeholder="이메일 주소"
+                  data-i18n-placeholder="contactEmailPlaceholder"
+                >
+              </div>
+            </div>
+            <div class="field">
+              <label for="contact-message" data-i18n="contactMessageLabel">문의 사항</label>
+              <textarea
+                id="contact-message"
+                name="message"
+                class="textarea"
+                required
+                placeholder="어떤 프로젝트를 도와드릴까요?"
+                data-i18n-placeholder="contactMessagePlaceholder"
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" data-i18n="contactSubmitButton">문의 보내기</button>
+              <a class="btn btn-secondary" href="#top" data-i18n="contactBackToTop">맨 위로 이동</a>
+            </div>
+            <div id="contact-status" class="form-status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span data-i18n="footerCopy">© 2026 NextAI Studio. All rights reserved.</span>
+      <span data-i18n="footerLinks">Privacy · Terms · Contact</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var header = document.querySelector(".site-header");
+      var navLinks = document.querySelectorAll(".nav-links a");
+      var sections = document.querySelectorAll("main section[id]");
+      var navToggle = document.querySelector(".nav-toggle");
+      var navMenu = document.getElementById("nav-links");
+
+      // ------------------------------
+      // Theme (light/dark) + i18n
+      // ------------------------------
+      var translations = {
+        ko: {
+          brandName: "NextAI Studio",
+          languageLabel: "언어",
+          menuButton: "메뉴",
+
+          navAbout: "개요",
+          navSolution: "솔루션",
+          navServices: "서비스",
+          navProcess: "프로세스",
+          navResults: "성과",
+          navFaq: "FAQ",
+          navContact: "문의",
+
+          themeToggle: "Dark",
+          themeToggleDark: "다크",
+          themeToggleLight: "라이트",
+
+          heroEyebrow: "AI 에이전트 기반 에이전시",
+          heroTitle: "AI 에이전트와 함께,<br>현대적인 앱 개발을 더 빠르게.",
+          heroSubtitle:
+            "NextAI Studio는 기획부터 배포까지 AI 에이전트 기반 워크플로우로 MVP와 프로덕션 애플리케이션을 효율적으로 구축합니다.",
+          heroCtaContact: "상담 요청하기",
+          heroCtaProcess: "작업 방식 보기",
+
+          flowDiscoverTitle: "Discover",
+          flowDiscoverDesc: "문제 정의와 성공 지표 정렬",
+          flowDesignTitle: "Design Agent Flow",
+          flowDesignDesc: "사람+에이전트 협업 구조 설계",
+          flowBuildTitle: "Build Sprint",
+          flowBuildDesc: "짧은 주기의 구현과 반복 개선",
+          flowValidateTitle: "Validate & Ship",
+          flowValidateDesc: "QA 자동화와 배포 최적화",
+
+          aboutTitle: "왜 지금, AI 에이전트 기반 개발인가",
+          aboutDesc:
+            "전통적인 방식은 반복 작업과 커뮤니케이션 병목으로 출시 속도가 느려집니다. NextAI Studio는 에이전트를 활용해 탐색, 구현, 검증의 시간을 단축합니다.",
+          problem1Title: "느린 개발 사이클",
+          problem1Desc: "요구사항 반영과 배포까지 리드타임이 길어 시장 대응이 늦어집니다.",
+          problem2Title: "반복적인 작업 부담",
+          problem2Desc: "보일러플레이트, 테스트, 문서화 등 반복 업무에 리소스가 소모됩니다.",
+          problem3Title: "품질과 속도의 트레이드오프",
+          problem3Desc: "속도를 높이면 품질이 흔들리고, 품질을 지키면 속도가 떨어지기 쉽습니다.",
+
+          solutionTitle: "NextAI Studio의 솔루션",
+          solutionDesc:
+            "사람의 의사결정에 AI 에이전트의 실행력을 결합해, 입문자부터 실무팀까지 재현 가능한 빌드 프로세스를 제공합니다.",
+          solutionCardTitle: "Human + Agent 협업 모델",
+          solutionCardDesc:
+            "전략과 우선순위는 사람이 결정하고, 에이전트는 구현/리팩터링/테스트/검증을 보조합니다. 이를 통해 개발 속도와 품질을 동시에 확보합니다.",
+
+          servicesTitle: "핵심 서비스",
+          servicesDesc: "프로젝트의 단계별 목표에 맞춰 유연한 패키지로 제공합니다.",
+          service1Title: "Agent-Powered MVP Build",
+          service1Desc:
+            "아이디어 검증을 위한 MVP를 빠르게 설계하고 실제 동작 가능한 형태로 구현합니다.",
+          service2Title: "Legacy Modernization",
+          service2Desc: "기존 시스템을 현대적인 구조로 개선해 유지보수성과 확장성을 높입니다.",
+          service3Title: "UI/UX Prototyping",
+          service3Desc: "실험 가능한 화면과 인터랙션을 빠르게 만들어 사용자 피드백을 앞당깁니다.",
+          service4Title: "Automated QA & Iteration",
+          service4Desc: "기능 검증 루프를 자동화해 릴리즈 리스크를 줄이고 개선 주기를 단축합니다.",
+          service5Title: "Product Engineering Support",
+          service5Desc: "설계 원칙과 개발 프로세스까지 정리해 내부 팀의 실행력을 함께 끌어올립니다.",
+          service6Title: "Growth-Oriented Roadmap",
+          service6Desc: "출시 이후 성장을 고려한 기능 우선순위와 기술 로드맵을 제안합니다.",
+
+          processTitle: "작업 프로세스",
+          processDesc: "짧은 반복 주기로 가설을 검증하고, 실서비스 품질까지 단계적으로 확장합니다.",
+
+          step1Small: "Step 1",
+          step1Title: "Discovery",
+          step1Desc: "목표 사용자, 문제, 성공 지표를 정리합니다.",
+          step2Small: "Step 2",
+          step2Title: "Agent Workflow Design",
+          step2Desc: "에이전트 역할과 협업 경계를 설계합니다.",
+          step3Small: "Step 3",
+          step3Title: "Build Sprint",
+          step3Desc: "핵심 기능을 빠르게 구현하고 피드백을 반영합니다.",
+          step4Small: "Step 4",
+          step4Title: "Validate & Ship",
+          step4Desc: "QA 자동화와 검증을 거쳐 안정적으로 배포합니다.",
+          step5Small: "Step 5",
+          step5Title: "Continuous Improvement",
+          step5Desc: "지표 기반으로 기능과 경험을 반복 개선합니다.",
+
+          resultsTitle: "성과 및 신뢰 지표",
+          resultsDesc: "프로젝트 성격에 따라 지표는 달라지지만, 공통적으로 속도와 안정성 개선을 목표로 합니다.",
+          kpi1Value: "50%",
+          kpi1Label: "평균 리드타임 단축",
+          kpi2Value: "2x",
+          kpi2Label: "주간 배포 빈도 향상",
+          kpi3Value: "30%",
+          kpi3Label: "반복 업무 시간 절감",
+
+          badge1: "SaaS MVP",
+          badge2: "커머스 플랫폼",
+          badge3: "내부 운영 툴",
+          badge4: "B2B 프로덕트",
+          badge5: "AI 기능 통합 프로젝트",
+
+          faqTitle: "자주 묻는 질문",
+          faqDesc: "입문자도 이해하기 쉬운 방식으로 진행하며, 프로젝트 상황에 맞춰 유연하게 대응합니다.",
+          faqQ1: "입문자도 에이전트 기반 개발을 시작할 수 있나요?",
+          faqA1: "가능합니다. 목표 설정, 도구 선택, 역할 분리까지 실무에 맞춘 기본 프레임을 함께 설계해드립니다.",
+          faqQ2: "내부 개발팀이 없어도 프로젝트를 진행할 수 있나요?",
+          faqA2: "네. 기획 단계부터 개발, 검증, 배포까지 풀사이클로 지원하며 필요한 경우 운영 가이드까지 제공합니다.",
+          faqQ3: "기간과 비용은 어떻게 산정되나요?",
+          faqA3: "목표 범위, 복잡도, 일정에 따라 산정합니다. Discovery 이후 명확한 범위 문서와 함께 견적을 제안합니다.",
+
+          contactTitle: "지금, NextAI Studio와 시작하세요",
+          contactDesc:
+            "아이디어 검증이든 기존 서비스 고도화든, AI 에이전트 기반 워크플로우로 더 빠르고 신뢰도 높은 제품 개발을 도와드립니다.",
+          contactNameLabel: "이름",
+          contactNamePlaceholder: "이름",
+          contactEmailLabel: "이메일",
+          contactEmailPlaceholder: "이메일 주소",
+          contactMessageLabel: "문의 사항",
+          contactMessagePlaceholder: "어떤 프로젝트를 도와드릴까요?",
+          contactSubmitButton: "문의 보내기",
+          contactBackToTop: "맨 위로 이동",
+
+          contactMailSubject: "NextAI Studio 문의",
+          contactMailBody:
+            "다음 내용을 문의드립니다.\n\n이름: {name}\n이메일: {email}\n\n문의 내용:\n{message}\n\n문의 언어: {lang}",
+          contactLanguageLabel: "Korean",
+          contactErrorName: "이름을 입력해 주세요.",
+          contactErrorEmail: "유효한 이메일 주소를 입력해 주세요.",
+          contactErrorMessage: "문의 내용을 입력해 주세요.",
+          contactStatusOpening: "메일 앱을 열 준비를 하고 있어요. 잠시만 기다려 주세요.",
+
+          footerCopy: "© 2026 NextAI Studio. All rights reserved.",
+          footerLinks: "Privacy · Terms · Contact",
+        },
+        en: {
+          brandName: "NextAI Studio",
+          languageLabel: "Language",
+          menuButton: "Menu",
+
+          navAbout: "Overview",
+          navSolution: "Solution",
+          navServices: "Services",
+          navProcess: "Process",
+          navResults: "Results",
+          navFaq: "FAQ",
+          navContact: "Contact",
+
+          themeToggle: "Dark",
+          themeToggleDark: "Dark",
+          themeToggleLight: "Light",
+
+          heroEyebrow: "AI Agent-Powered Agency",
+          heroTitle: "With AI agents,<br>build modern apps faster.",
+          heroSubtitle:
+            "NextAI Studio builds MVPs and production-ready applications efficiently using an agent-based workflow—from discovery to deployment.",
+          heroCtaContact: "Request a consult",
+          heroCtaProcess: "See how it works",
+
+          flowDiscoverTitle: "Discover",
+          flowDiscoverDesc: "Align problems and success metrics",
+          flowDesignTitle: "Design Agent Flow",
+          flowDesignDesc: "Plan human + agent collaboration",
+          flowBuildTitle: "Build Sprint",
+          flowBuildDesc: "Iterate through short build cycles",
+          flowValidateTitle: "Validate & Ship",
+          flowValidateDesc: "Automate QA and optimize delivery",
+
+          aboutTitle: "Why AI Agents now?",
+          aboutDesc:
+            "Traditional development slows down due to repetitive work and communication bottlenecks. NextAI Studio uses agents to shorten the time for exploration, implementation, and validation.",
+          problem1Title: "Slow development cycles",
+          problem1Desc: "Long lead time from requirements to release delays market response.",
+          problem2Title: "Too much repetitive work",
+          problem2Desc: "Boilerplate, testing, and documentation consume valuable resources.",
+          problem3Title: "Speed vs quality trade-off",
+          problem3Desc: "If you push speed, quality can drop; if you protect quality, speed often suffers.",
+
+          solutionTitle: "NextAI Studio’s approach",
+          solutionDesc:
+            "We combine human decision-making with agent execution power to deliver a repeatable build process—from beginners to in-house teams.",
+          solutionCardTitle: "Human + Agent Collaboration",
+          solutionCardDesc:
+            "People decide strategy and priorities, while agents support implementation, refactoring, testing, and validation—so you get both speed and quality.",
+
+          servicesTitle: "Core services",
+          servicesDesc: "Flexible packages aligned to each stage of your project.",
+          service1Title: "Agent-Powered MVP Build",
+          service1Desc: "Design and implement an MVP quickly—turning ideas into something working.",
+          service2Title: "Legacy Modernization",
+          service2Desc: "Modernize legacy systems to improve maintainability and scalability.",
+          service3Title: "UI/UX Prototyping",
+          service3Desc: "Create testable screens and interactions fast to accelerate user feedback.",
+          service4Title: "Automated QA & Iteration",
+          service4Desc: "Automate the validation loop to reduce release risk and speed up improvements.",
+          service5Title: "Product Engineering Support",
+          service5Desc: "Codify design principles and engineering processes to uplift your team’s execution.",
+          service6Title: "Growth-Oriented Roadmap",
+          service6Desc: "Plan priorities and a technical roadmap with post-launch growth in mind.",
+
+          processTitle: "Working process",
+          processDesc: "Validate hypotheses in short iterations, then expand into production-grade quality.",
+
+          step1Small: "Step 1",
+          step1Title: "Discovery",
+          step1Desc: "Define target users, the problem, and success metrics.",
+          step2Small: "Step 2",
+          step2Title: "Agent Workflow Design",
+          step2Desc: "Design agent roles and collaboration boundaries.",
+          step3Small: "Step 3",
+          step3Title: "Build Sprint",
+          step3Desc: "Implement core features quickly and incorporate feedback.",
+          step4Small: "Step 4",
+          step4Title: "Validate & Ship",
+          step4Desc: "Release with confidence using automated QA and validation.",
+          step5Small: "Step 5",
+          step5Title: "Continuous Improvement",
+          step5Desc: "Improve features and experiences repeatedly based on metrics.",
+
+          resultsTitle: "Results you can trust",
+          resultsDesc: "Metrics vary by project, but our focus is always faster delivery and higher stability.",
+          kpi1Value: "50%",
+          kpi1Label: "Avg. lead time reduction",
+          kpi2Value: "2x",
+          kpi2Label: "More frequent weekly releases",
+          kpi3Value: "30%",
+          kpi3Label: "Less time spent on repetitive tasks",
+
+          badge1: "SaaS MVP",
+          badge2: "E-commerce Platforms",
+          badge3: "Internal Ops Tools",
+          badge4: "B2B Products",
+          badge5: "AI Feature Integrations",
+
+          faqTitle: "FAQ",
+          faqDesc: "Beginner-friendly delivery with flexible adaptation to your situation.",
+          faqQ1: "Can beginners start agent-based development?",
+          faqA1: "Yes. We design a practical baseline—goal setting, tool selection, and role separation—so you can move fast with confidence.",
+          faqQ2: "Can we work without an internal engineering team?",
+          faqA2: "Yes. We support end-to-end—from planning to development, validation, and deployment. We can also provide ops guidance when needed.",
+          faqQ3: "How do you estimate timeline and cost?",
+          faqA3: "We estimate based on scope, complexity, and schedule. After Discovery, we provide a clear scope document and a proposal.",
+
+          contactTitle: "Start with NextAI Studio",
+          contactDesc:
+            "Whether it’s validating an idea or modernizing an existing service, we help you build a faster, more reliable product with agent-based workflows.",
+          contactNameLabel: "Name",
+          contactNamePlaceholder: "Your name",
+          contactEmailLabel: "Email",
+          contactEmailPlaceholder: "Your email address",
+          contactMessageLabel: "Your message",
+          contactMessagePlaceholder: "What would you like help with?",
+          contactSubmitButton: "Send inquiry",
+          contactBackToTop: "Back to top",
+
+          contactMailSubject: "NextAI Studio Inquiry",
+          contactMailBody:
+            "Here is my inquiry.\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}\n\nLanguage: {lang}",
+          contactLanguageLabel: "English",
+          contactErrorName: "Please enter your name.",
+          contactErrorEmail: "Please enter a valid email address.",
+          contactErrorMessage: "Please enter your message.",
+          contactStatusOpening: "Preparing to open your mail app. Please wait a moment.",
+
+          footerCopy: "© 2026 NextAI Studio. All rights reserved.",
+          footerLinks: "Privacy · Terms · Contact",
+        },
+        ja: {
+          brandName: "NextAI Studio",
+          languageLabel: "言語",
+          menuButton: "メニュー",
+
+          navAbout: "概要",
+          navSolution: "ソリューション",
+          navServices: "サービス",
+          navProcess: "プロセス",
+          navResults: "成果",
+          navFaq: "FAQ",
+          navContact: "お問い合わせ",
+
+          themeToggle: "Dark",
+          themeToggleDark: "ダーク",
+          themeToggleLight: "ライト",
+
+          heroEyebrow: "AIエージェント駆動のエージェンシー",
+          heroTitle: "AIエージェントと一緒に、<br>モダンなアプリをより速く。",
+          heroSubtitle:
+            "NextAI Studioは、発見からデプロイまでのエージェントベースのワークフローで、MVPと本番対応アプリを効率よく構築します。",
+          heroCtaContact: "相談する",
+          heroCtaProcess: "進め方を見る",
+
+          flowDiscoverTitle: "Discover",
+          flowDiscoverDesc: "課題と成功指標を揃える",
+          flowDesignTitle: "Design Agent Flow",
+          flowDesignDesc: "人×エージェントの協業を設計",
+          flowBuildTitle: "Build Sprint",
+          flowBuildDesc: "短いサイクルで反復改善",
+          flowValidateTitle: "Validate & Ship",
+          flowValidateDesc: "QA自動化とデリバリー最適化",
+
+          aboutTitle: "なぜ今、AIエージェント？",
+          aboutDesc:
+            "従来の開発は、繰り返し作業とコミュニケーションのボトルネックでリリースが遅れがちです。NextAI Studioは、探索・実装・検証の時間を短縮するためにエージェントを活用します。",
+          problem1Title: "開発サイクルが遅い",
+          problem1Desc: "要件〜リリースまでのリードタイムが長く、市場対応が遅れます。",
+          problem2Title: "反復作業の負担が大きい",
+          problem2Desc: "ボイラープレート、テスト、ドキュメント作成などがリソースを消費します。",
+          problem3Title: "スピードと品質のトレードオフ",
+          problem3Desc: "スピードを上げると品質が下がりやすく、品質を守るとスピードが落ちがちです。",
+
+          solutionTitle: "NextAI Studioのアプローチ",
+          solutionDesc:
+            "人の意思決定に、AIエージェントの実行力を組み合わせて、初心者から社内チームまで再現可能なビルドプロセスを提供します。",
+          solutionCardTitle: "Human + Agent 協業モデル",
+          solutionCardDesc:
+            "戦略と優先度は人が決め、エージェントは実装・リファクタリング・テスト・検証をサポートします。これによりスピードと品質を両立します。",
+
+          servicesTitle: "主要サービス",
+          servicesDesc: "各フェーズの目標に合わせて柔軟に提供します。",
+          service1Title: "エージェント駆動のMVP構築",
+          service1Desc: "アイデアを素早く検証できるMVPを設計し、動く形に実装します。",
+          service2Title: "レガシーのモダナイズ",
+          service2Desc: "既存システムを現代的な構造へ改善し、保守性と拡張性を高めます。",
+          service3Title: "UI/UXプロトタイピング",
+          service3Desc: "試せる画面とインタラクションを早く作り、ユーザーフィードバックを加速します。",
+          service4Title: "自動QAと反復改善",
+          service4Desc: "検証ループを自動化してリリースリスクを下げ、改善サイクルを短縮します。",
+          service5Title: "プロダクトエンジニアリング支援",
+          service5Desc: "設計原則と開発プロセスを整理し、チームの実行力を引き上げます。",
+          service6Title: "成長を見据えたロードマップ",
+          service6Desc: "リリース後の成長を前提に、優先順位と技術ロードマップを提案します。",
+
+          processTitle: "進め方",
+          processDesc: "短い反復で仮説を検証し、段階的に本番品質へ拡張します。",
+
+          step1Small: "Step 1",
+          step1Title: "Discovery",
+          step1Desc: "ターゲットユーザー、課題、成功指標を整理します。",
+          step2Small: "Step 2",
+          step2Title: "Agent Workflow Design",
+          step2Desc: "エージェントの役割と協業の境界を設計します。",
+          step3Small: "Step 3",
+          step3Title: "Build Sprint",
+          step3Desc: "コア機能を素早く実装し、フィードバックを反映します。",
+          step4Small: "Step 4",
+          step4Title: "Validate & Ship",
+          step4Desc: "自動QAと検証を通じて安心してデプロイします。",
+          step5Small: "Step 5",
+          step5Title: "Continuous Improvement",
+          step5Desc: "指標に基づいて機能と体験を継続的に改善します。",
+
+          resultsTitle: "成果と信頼できる指標",
+          resultsDesc: "プロジェクトにより指標は変わりますが、私たちは常にスピードと安定性の改善を目標にしています。",
+          kpi1Value: "50%",
+          kpi1Label: "平均リードタイム削減",
+          kpi2Value: "2x",
+          kpi2Label: "週次デプロイ頻度の向上",
+          kpi3Value: "30%",
+          kpi3Label: "反復作業の時間を削減",
+
+          badge1: "SaaS MVP",
+          badge2: "ECプラットフォーム",
+          badge3: "社内運用ツール",
+          badge4: "B2Bプロダクト",
+          badge5: "AI機能の統合案件",
+
+          faqTitle: "よくある質問",
+          faqDesc: "初心者でも分かりやすく、状況に合わせて柔軟に対応します。",
+          faqQ1: "初心者でもエージェント開発を始められますか？",
+          faqA1: "可能です。目標設定、ツール選定、役割分担まで、実務に合うベースを一緒に設計します。",
+          faqQ2: "社内の開発チームがなくても進められますか？",
+          faqA2: "はい。企画から開発、検証、デプロイまでエンドツーエンドで支援します。必要に応じて運用ガイドも提供します。",
+          faqQ3: "期間と費用はどう見積もりますか？",
+          faqA3: "スコープ、複雑さ、スケジュールをもとに見積もります。Discovery後に明確なスコープ文書と提案をお送りします。",
+
+          contactTitle: "今すぐNextAI Studioと始めましょう",
+          contactDesc:
+            "アイデア検証でも既存サービスの高度化でも、AIエージェントのワークフローでより速く、より信頼性の高い開発をお手伝いします。",
+          contactNameLabel: "お名前",
+          contactNamePlaceholder: "お名前をご入力ください",
+          contactEmailLabel: "メールアドレス",
+          contactEmailPlaceholder: "メールアドレスをご入力ください",
+          contactMessageLabel: "お問い合わせ内容",
+          contactMessagePlaceholder: "どのようなプロジェクトをご希望ですか？",
+          contactSubmitButton: "送信する",
+          contactBackToTop: "ページ上部へ",
+
+          contactMailSubject: "NextAI Studio お問い合わせ",
+          contactMailBody:
+            "以下についてお問い合わせします。\n\nお名前: {name}\nメール: {email}\n\n内容:\n{message}\n\nお問い合わせ言語: {lang}",
+          contactLanguageLabel: "Japanese",
+          contactErrorName: "お名前を入力してください。",
+          contactErrorEmail: "有効なメールアドレスを入力してください。",
+          contactErrorMessage: "お問い合わせ内容を入力してください。",
+          contactStatusOpening: "メールアプリを開く準備をしています。少々お待ちください。",
+
+          footerCopy: "© 2026 NextAI Studio. All rights reserved.",
+          footerLinks: "Privacy · Terms · Contact",
+        },
+        zh: {
+          brandName: "NextAI Studio",
+          languageLabel: "语言",
+          menuButton: "菜单",
+
+          navAbout: "概览",
+          navSolution: "解决方案",
+          navServices: "服务",
+          navProcess: "流程",
+          navResults: "结果",
+          navFaq: "常见问题",
+          navContact: "联系",
+
+          themeToggle: "Dark",
+          themeToggleDark: "深色",
+          themeToggleLight: "浅色",
+
+          heroEyebrow: "AI 智能体驱动的代理机构",
+          heroTitle: "与 AI 智能体一起，<br>更快构建现代应用。",
+          heroSubtitle:
+            "NextAI Studio 使用基于智能体的工作流，从发现到部署，高效构建 MVP 与可上线的生产级应用。",
+          heroCtaContact: "请求咨询",
+          heroCtaProcess: "查看工作方式",
+
+          flowDiscoverTitle: "Discover",
+          flowDiscoverDesc: "对齐问题与成功指标",
+          flowDesignTitle: "Design Agent Flow",
+          flowDesignDesc: "规划人类与智能体协作结构",
+          flowBuildTitle: "Build Sprint",
+          flowBuildDesc: "通过短周期迭代改进",
+          flowValidateTitle: "Validate & Ship",
+          flowValidateDesc: "自动化 QA 并优化交付",
+
+          aboutTitle: "为什么现在要用 AI 智能体？",
+          aboutDesc:
+            "传统开发由于重复工作与沟通瓶颈，往往导致上线速度变慢。NextAI Studio 通过智能体缩短探索、实现与验证的时间。",
+          problem1Title: "开发周期太慢",
+          problem1Desc: "从需求到发布的交付周期过长，影响市场响应速度。",
+          problem2Title: "重复劳动负担重",
+          problem2Desc: "样板代码、测试与文档等重复工作会消耗大量资源。",
+          problem3Title: "速度与质量的权衡",
+          problem3Desc: "追求速度可能导致质量下降；守住质量又容易牺牲效率。",
+
+          solutionTitle: "NextAI Studio 的方案",
+          solutionDesc:
+            "我们将人的决策能力与智能体的执行能力结合，向初学者与内部团队交付可复用的构建流程。",
+          solutionCardTitle: "Human + Agent 协作模型",
+          solutionCardDesc:
+            "战略与优先级由人来决定；智能体负责实现、重构、测试与验证。这样你可以同时获得速度与质量。",
+
+          servicesTitle: "核心服务",
+          servicesDesc: "根据项目各阶段目标，提供灵活组合的交付内容。",
+          service1Title: "AI 智能体驱动的 MVP 构建",
+          service1Desc: "快速设计并实现 MVP，把想法变成可运行的产品。",
+          service2Title: "遗留系统现代化",
+          service2Desc: "将旧系统现代化，提升可维护性与可扩展性。",
+          service3Title: "UI/UX 原型设计",
+          service3Desc: "快速制作可测试的界面与交互，加速获取用户反馈。",
+          service4Title: "自动化 QA 与迭代",
+          service4Desc: "自动化验证循环，降低发布风险并缩短改进周期。",
+          service5Title: "产品工程支持",
+          service5Desc: "沉淀设计原则与工程流程，提升团队执行力。",
+          service6Title: "面向增长的路线图",
+          service6Desc: "考虑上线后的增长需求，提供功能优先级与技术路线规划。",
+
+          processTitle: "工作流程",
+          processDesc: "通过短周期迭代验证假设，再逐步扩展到生产级质量。",
+
+          step1Small: "Step 1",
+          step1Title: "Discovery",
+          step1Desc: "明确目标用户、问题与成功指标。",
+          step2Small: "Step 2",
+          step2Title: "Agent Workflow Design",
+          step2Desc: "设计智能体角色与协作边界。",
+          step3Small: "Step 3",
+          step3Title: "Build Sprint",
+          step3Desc: "快速实现核心功能，并融入反馈。",
+          step4Small: "Step 4",
+          step4Title: "Validate & Ship",
+          step4Desc: "通过自动化 QA 与验证，安心上线。",
+          step5Small: "Step 5",
+          step5Title: "Continuous Improvement",
+          step5Desc: "基于指标持续优化功能与体验。",
+
+          resultsTitle: "成果与可信指标",
+          resultsDesc: "指标会随项目而变化，但我们的重点始终是更快交付与更高稳定性。",
+          kpi1Value: "50%",
+          kpi1Label: "平均交付周期缩短",
+          kpi2Value: "2x",
+          kpi2Label: "每周发布频率提升",
+          kpi3Value: "30%",
+          kpi3Label: "减少重复任务时间",
+
+          badge1: "SaaS MVP",
+          badge2: "电商平台",
+          badge3: "内部运营工具",
+          badge4: "B2B 产品",
+          badge5: "AI 功能集成项目",
+
+          faqTitle: "常见问题",
+          faqDesc: "对新手友好，并根据项目情况灵活调整交付方式。",
+          faqQ1: "新手也能开始智能体驱动的开发吗？",
+          faqA1: "可以。我们一起设计一套务实的基础：目标设定、工具选择与角色拆分，让你能够更快更稳地推进。",
+          faqQ2: "没有内部开发团队也能做吗？",
+          faqA2: "可以。我们提供端到端支持：从规划到开发、验证与上线，并且在需要时提供运维指引。",
+          faqQ3: "周期和费用怎么估算？",
+          faqA3: "根据范围、复杂度与排期来估算。Discovery 之后会提供明确的范围文档与报价建议。",
+
+          contactTitle: "现在就从 NextAI Studio 开始",
+          contactDesc:
+            "无论是验证创意还是升级现有服务，我们都会用基于智能体的工作流，帮助你更快、更可靠地构建产品。",
+          contactNameLabel: "姓名",
+          contactNamePlaceholder: "请输入姓名",
+          contactEmailLabel: "邮箱",
+          contactEmailPlaceholder: "请输入邮箱地址",
+          contactMessageLabel: "咨询内容",
+          contactMessagePlaceholder: "你希望我们帮助什么项目？",
+          contactSubmitButton: "发送咨询",
+          contactBackToTop: "返回顶部",
+
+          contactMailSubject: "NextAI Studio 咨询",
+          contactMailBody:
+            "以下是我的咨询。\n\n姓名: {name}\n邮箱: {email}\n\n咨询内容:\n{message}\n\n咨询语言: {lang}",
+          contactLanguageLabel: "Chinese",
+          contactErrorName: "请填写姓名。",
+          contactErrorEmail: "请填写有效的邮箱地址。",
+          contactErrorMessage: "请填写咨询内容。",
+          contactStatusOpening: "正在准备打开你的邮件客户端，请稍候。",
+
+          footerCopy: "© 2026 NextAI Studio. 保留所有权利。",
+          footerLinks: "隐私 · 条款 · 联系",
+        },
+      };
+
+      var languageSelect = document.getElementById("lang-select");
+      var themeToggle = document.getElementById("theme-toggle");
+      var themeToggleText = document.getElementById("theme-toggle-text");
+
+      var currentLang = "ko";
+
+      function normalizeLang(lang) {
+        var v = String(lang || "").toLowerCase();
+        if (v.indexOf("ja") === 0) return "ja";
+        if (v.indexOf("zh") === 0) return "zh";
+        if (v.indexOf("en") === 0) return "en";
+        return "ko";
+      }
+
+      function getSystemTheme() {
+        return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      }
+
+      function applyLang(lang) {
+        currentLang = normalizeLang(lang);
+        var dict = translations[currentLang] || translations.ko;
+
+        if (languageSelect) {
+          languageSelect.value = currentLang;
+        }
+
+        var docLang = "ko";
+        if (currentLang === "en") docLang = "en";
+        if (currentLang === "ja") docLang = "ja";
+        if (currentLang === "zh") docLang = "zh";
+        document.documentElement.lang = docLang;
+
+        document.querySelectorAll("[data-i18n]").forEach(function (el) {
+          var key = el.getAttribute("data-i18n");
+          if (!key) return;
+          var val = dict[key];
+          if (val === undefined) return;
+          el.innerHTML = val;
+        });
+
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+          var key = el.getAttribute("data-i18n-placeholder");
+          if (!key) return;
+          var val = dict[key];
+          if (val === undefined) return;
+          el.setAttribute("placeholder", val);
+        });
+      }
+
+      function applyTheme(theme) {
+        var next = theme === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = next;
+        if (themeToggle) {
+          themeToggle.setAttribute("aria-pressed", String(next === "dark"));
+        }
+        if (themeToggleText) {
+          var dict = translations[currentLang] || translations.ko;
+          themeToggleText.textContent =
+            next === "dark" ? dict.themeToggleLight : dict.themeToggleDark;
+        }
+      }
+
+      // Init language/theme
+      var storedLang = localStorage.getItem("nextai-lang");
+      var initialLang = normalizeLang(storedLang || (navigator.language || "ko"));
+      applyLang(initialLang);
+
+      var storedTheme = localStorage.getItem("nextai-theme");
+      applyTheme(storedTheme || getSystemTheme());
+
+      if (languageSelect) {
+        languageSelect.addEventListener("change", function (e) {
+          var lang = normalizeLang(e.target.value);
+          localStorage.setItem("nextai-lang", lang);
+          applyLang(lang);
+          applyTheme(document.documentElement.dataset.theme || getSystemTheme());
+        });
+      }
+
+      if (themeToggle) {
+        themeToggle.addEventListener("click", function () {
+          var current = document.documentElement.dataset.theme || "light";
+          var next = current === "dark" ? "light" : "dark";
+          localStorage.setItem("nextai-theme", next);
+          applyTheme(next);
+        });
+      }
+
+      function handleHeaderShadow() {
+        if (window.scrollY > 8) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      }
+
+      function setActiveLink() {
+        var scrollPos = window.scrollY + 120;
+        sections.forEach(function (section) {
+          var top = section.offsetTop;
+          var bottom = top + section.offsetHeight;
+          var id = section.getAttribute("id");
+          if (scrollPos >= top && scrollPos < bottom) {
+            navLinks.forEach(function (link) {
+              link.classList.toggle("active", link.getAttribute("href") === "#" + id);
+            });
+          }
+        });
+      }
+
+      window.addEventListener("scroll", function () {
+        handleHeaderShadow();
+        setActiveLink();
+      });
+      handleHeaderShadow();
+      setActiveLink();
+
+      if (navToggle && navMenu) {
+        navToggle.addEventListener("click", function () {
+          var expanded = navToggle.getAttribute("aria-expanded") === "true";
+          navToggle.setAttribute("aria-expanded", String(!expanded));
+          navMenu.classList.toggle("open");
+        });
+
+        navLinks.forEach(function (link) {
+          link.addEventListener("click", function () {
+            navMenu.classList.remove("open");
+            navToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      // Contact form (mailto)
+      var contactForm = document.getElementById("contact-form");
+      var contactStatus = document.getElementById("contact-status");
+      function renderTemplate(tpl, vars) {
+        return String(tpl || "").replace(/\{(\w+)\}/g, function (_, key) {
+          return vars[key] !== undefined ? vars[key] : "";
+        });
+      }
+
+      function getEmailRegex() {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      }
+
+      if (contactForm) {
+        contactForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!contactStatus) return;
+
+          var dict = translations[currentLang] || translations.ko;
+          var emailTo = "swleelee860921@naver.com";
+
+          var nameInput = document.getElementById("contact-name");
+          var emailInput = document.getElementById("contact-email");
+          var msgInput = document.getElementById("contact-message");
+
+          var name = nameInput ? String(nameInput.value || "").trim() : "";
+          var email = emailInput ? String(emailInput.value || "").trim() : "";
+          var message = msgInput ? String(msgInput.value || "").trim() : "";
+
+          if (!name) {
+            contactStatus.textContent = dict.contactErrorName;
+            return;
+          }
+          if (!email || !getEmailRegex().test(email)) {
+            contactStatus.textContent = dict.contactErrorEmail;
+            return;
+          }
+          if (!message) {
+            contactStatus.textContent = dict.contactErrorMessage;
+            return;
+          }
+
+          var langLabel = dict.contactLanguageLabel || currentLang;
+          var subject = dict.contactMailSubject || "NextAI Studio Inquiry";
+          var body = renderTemplate(dict.contactMailBody || "", {
+            name: name,
+            email: email,
+            message: message,
+            lang: langLabel,
+          });
+
+          var url =
+            "mailto:" +
+            emailTo +
+            "?subject=" +
+            encodeURIComponent(subject) +
+            "&body=" +
+            encodeURIComponent(body);
+
+          contactStatus.textContent = dict.contactStatusOpening;
+          window.location.href = url;
+        });
+      }
+
+      var faqButtons = document.querySelectorAll(".faq-question");
+      faqButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var item = btn.closest(".faq-item");
+          var isOpen = item.classList.contains("open");
+          faqButtons.forEach(function (otherBtn) {
+            otherBtn.closest(".faq-item").classList.remove("open");
+            otherBtn.setAttribute("aria-expanded", "false");
+          });
+          if (!isOpen) {
+            item.classList.add("open");
+            btn.setAttribute("aria-expanded", "true");
+          }
+        });
+      });
+
+      var revealElements = document.querySelectorAll(".reveal");
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.15
+        }
+      );
+
+      revealElements.forEach(function (el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
+</body>
+</html>
